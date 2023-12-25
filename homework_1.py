@@ -66,16 +66,34 @@ def TODO3():
 #помните, что для дронов тяжелее 150 г согласовывать полет над населенным пунктом - обязательно!
 
 def TODO4():
-	height = 100
+	#добавим счетчики для дронов, которым нужно согласовывать полет и которым не нужно
+	count_yes = 0
+	count_no = 0
+
+	height = 155
 	local = True
 	close= False
 	visible = True
 
 	for drone, weight in zip(drone_list,  drone_weight_list):
-		if weight < 150 or (not local and height < 155 and not close and visible):
-			print(drone,"Does not require flight approval")
+		#определим. нужно ли согласовывать полет для дрона
+		approval = (
+			visible and (height > 150 or (weight >= 150 and not local))
+			and not close
+		)
+		
+		#проверим условие
+		if approval:
+			count_yes += 1
+			print(f"{drone} {' '.join(drone_list[1:])} - нужно согласование полета")
 		else:
-			print(drone, "Requires flight approval")
+			count_no += 1
+			print(f"{drone} {' '.join(drone_list[1:])} - не нужно согласование полета")
+
+	print(f"Количество дронов, которым нужно согласовывать полет: {count_yes}")
+	print(f"Количество дронов, которым не нужно согласовывать полет: {count_no}\n")
+
+		
 		
 #TODO5
 #модифицируйте решение задания TODO1:
